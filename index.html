@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="./dist/output.css" rel="stylesheet" />
+    <link href="./index.css" rel="stylesheet" />
+
+    <title>Frontend Mentor | Tic Tac Toe</title>
+  </head>
+  <body>
+    <div class="bg-[#1A2A33] h-screen">
+      <div
+        class="hidden first_page h-full flex flex-col items-center justify-center"
+      >
+        <div class="flex flex-row my-4">
+          <img class="h-8 m-1" src="./assets/icon-x.svg" alt="x" />
+          <img class="h-8 m-1" src="./assets/icon-o.svg" alt="o" />
+        </div>
+        <!-- CHOICE CONTAINER -->
+        <div
+          class="flex flex-col w-[327px] items-center justify-around bg-[#1F3641] drop-shadow-lg shadow-md rounded h-[205px]"
+        >
+          <h1 class="text-[#A8BFC9] font-bold">PICK PLAYER 1’S MARK</h1>
+          <div
+            class="choice_container bg-[#1A2A33] flex justify-center border rounded p-2 px-8"
+          >
+            <div
+              id="choice_x"
+              class="cursor-pointer px-4 rounded bg-[#9797977b]"
+            >
+              <img class="h-8 m-1" src="./assets/icon-x.svg" alt="x" />
+            </div>
+            <div id="choice_o" class="cursor-pointer">
+              <img class="h-8 m-1" src="./assets/icon-o.svg" alt="o" />
+            </div>
+          </div>
+          <p class="text-slate-500 text-sm">REMEMBER : X GOES FIRST</p>
+        </div>
+
+        <!-- USER OPTIONS -->
+        <div class="flex flex-col my-8">
+          <button
+            class="bg-[#F2B137] m-2 px-20 py-3 font-bold rounded drop-shadow-md shadow-md hover:shadow-xl active:scale-90 transition duration-150"
+          >
+            NEW GAME (VS CPU)
+          </button>
+          <button
+            class="bg-[#31C3BD] m-2 px-18 py-3 font-bold rounded drop-shadow-md shadow-md hover:shadow-xl active:scale-90 transition duration-150"
+          >
+            NEW GAME (VS PLAYER)
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 2 -->
+      <div class="second_page h-full flex flex-col items-center">
+        <div
+          class="second_page_header flex justify-between items-center w-96 px-6 my-5"
+        >
+          <div class="flex flex-row my-4">
+            <img class="h-8 m-1" src="./assets/icon-x.svg" alt="x" />
+            <img class="h-8 m-1" src="./assets/icon-o.svg" alt="o" />
+          </div>
+          <div
+            class="mr-10 drop-shadow-md px-5 py-2 bg-[#1F3641] font-bold text-slate-500 rounded"
+          >
+            <span class="user_turn">X</span>
+            <span>TURN</span>
+          </div>
+          <button
+            class="p-2 bg-[#979797] drop-shadow-sm rounded-md shadow-md hover:shadow-xl active:scale-90 transition duration-150"
+          >
+            <img src="./assets/icon-restart.svg" alt="restart" />
+          </button>
+        </div>
+
+        <!-- BOX CONTAINER -->
+        <div class="mt-10 grid grid-rows-3 grid-flow-col gap-6">
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            1
+          </div>
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            2
+          </div>
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            3
+          </div>
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            4
+          </div>
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            5
+          </div>
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            6
+          </div>
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            7
+          </div>
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            8
+          </div>
+          <div
+            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          >
+            9
+          </div>
+        </div>
+
+        <!-- RESULT CONTAINER -->
+        <div class="flex flex-row justify-around my-10 px-4 w-96">
+          <div
+            class="user-result h-16 w-24 bg-[#31C3BD] flex flex-col justify-center items-center rounded-md shadow-md drop-shadow-md"
+          >
+            <span class="text-sm font-semibold">X (YOU)</span>
+            <span class="font-bold">14</span>
+          </div>
+          <div
+            class="tie-result h-16 w-24 bg-[#979797] flex flex-col justify-center items-center rounded-md shadow-md drop-shadow-md"
+          >
+            <span class="text-sm font-semibold">X (YOU)</span>
+            <span class="font-bold">14</span>
+          </div>
+          <div
+            class="opponent-result h-16 w-24 bg-[#F2B137] flex flex-col justify-center items-center rounded-md shadow-md drop-shadow-md"
+          >
+            <span class="text-sm font-semibold">O (CPU)</span>
+            <span class="font-bold">14</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      var USER_CHOICE = null;
+      var USER_X = 0;
+      var USER_Y = 1;
+
+      const user_pick_x = document.getElementById("choice_x");
+      const user_pick_o = document.getElementById("choice_o");
+
+      user_pick_x.addEventListener("click", () => {
+        // Update the class and global variable for user's X choice
+        user_pick_x.classList.add("px-4", "rounded", "bg-[#9797977b]");
+        user_pick_o.classList.remove("px-4", "rounded", "bg-[#9797977b]");
+
+        USER_CHOICE = USER_X;
+      });
+
+      user_pick_o.addEventListener("click", () => {
+        // Update the class and global variable for user's O choice
+        user_pick_o.classList.add("px-4", "rounded", "bg-[#9797977b]");
+        user_pick_x.classList.remove("px-4", "rounded", "bg-[#9797977b]");
+
+        USER_CHOICE = USER_Y;
+      });
+    </script>
+  </body>
+</html>
