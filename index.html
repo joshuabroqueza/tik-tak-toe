@@ -260,6 +260,7 @@
       const x__result = document.getElementById("x__result");
       const o__result = document.getElementById("o__result");
 
+      //RESTART MODAL SECTION
       const show_restart_modal = document.getElementById("show_restart_modal");
       const restart_modal_container = document.getElementById(
         "restart_modal_container"
@@ -271,6 +272,13 @@
       const restart_modal_confirm = document.getElementById(
         "restart_modal_confirm"
       );
+
+      //WIN MODAL SECTION
+      const win_modal_container = document.getElementById(
+        "win_modal_container"
+      );
+      const win_modal_quit = document.getElementById("win_modal_quit");
+      const win_modal_next = document.getElementById("win_modal_next");
 
       const WINNING_COMBINATION = [
         [0, 1, 2],
@@ -318,6 +326,49 @@
       //RESTART THE GAME
       restart_modal_confirm.addEventListener("click", () => {
         restart_modal_container.classList.add("hidden");
+
+        //CLEAR THE BOARD
+        const boxes = document.querySelectorAll(".box");
+        boxes.forEach((box) => {
+          box.innerHTML = "";
+        });
+
+        //RESET THE REMAINING BOXES
+        REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        //RESET THE USER COMBINATION
+        user_combination.length = 0;
+        cpu_combination.length = 0;
+        second_user.length = 0;
+      });
+
+      //WIN MODAL SECTION
+      win_modal_quit.addEventListener("click", () => {
+        win_modal_container.classList.add("hidden");
+        first_page.classList.remove("hidden");
+        second_page.classList.add("hidden");
+
+        //CLEAR THE BOARD
+        const boxes = document.querySelectorAll(".box");
+        boxes.forEach((box) => {
+          box.innerHTML = "";
+        });
+
+        //RESET THE REMAINING BOXES
+        REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        //RESET THE USER COMBINATION
+        user_combination.length = 0;
+        cpu_combination.length = 0;
+        second_user.length = 0;
+
+        RESULT.X = 0;
+        RESULT.O = 0;
+        RESULT.TIE = 0;
+      });
+
+      win_modal_next.addEventListener("click", () => {
+        win_modal_container.classList.add("hidden");
 
         //CLEAR THE BOARD
         const boxes = document.querySelectorAll(".box");
@@ -480,18 +531,6 @@
                 // Remove the index from the remaining boxes array
                 REMAINING_BOXES.splice(REMAINING_BOXES.indexOf(index), 1);
 
-                // //check if the user wins
-                // const letOpponentContinue = checkUserWin(
-                //   WINNING_COMBINATION,
-                //   user_combination
-                // );
-
-                // //check if the cpu wins
-                // const letUserContinue = checkCPUWin(
-                //   WINNING_COMBINATION,
-                //   cpu_combination
-                // );
-
                 const result = checkResults(
                   WINNING_COMBINATION,
                   user_combination,
@@ -529,6 +568,10 @@
 
                   x__result.innerHTML = RESULT.X;
                   console.log(RESULT.X);
+
+                  win_modal_container.classList.remove("hidden");
+
+                  //SHOW WIN MODAL
 
                   // user__result.innerHTML = RESULT.X;
                 } else if (result === 2) {
