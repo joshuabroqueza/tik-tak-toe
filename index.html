@@ -77,6 +77,7 @@
             <span>TURN</span>
           </div>
           <button
+            id="show_restart_modal"
             class="p-2 bg-[#979797] drop-shadow-sm rounded-md shadow-md hover:shadow-xl active:scale-90 transition duration-150"
           >
             <img src="./assets/icon-restart.svg" alt="restart" />
@@ -178,6 +179,7 @@
 
       <!-- WIN MODAL CONTAINER -->
       <div
+        id="win_modal_container"
         class="hidden win_modal_container bg-[#1F3641] w-full h-[228px] flex flex-col items-center justify-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <p class="text-[#A8BFC9] text-sm font-bold">YOU WON!</p>
@@ -187,11 +189,13 @@
         </div>
         <div>
           <button
+            id="win_modal_quit"
             class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#A8BFC9]"
           >
             QUIT
           </button>
           <button
+            id="win_modal_next"
             class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#F2B137]"
           >
             NEXT ROUND
@@ -201,17 +205,20 @@
 
       <!-- RESTART MODAL -->
       <div
+        id="restart_modal_container"
         class="hidden restart_modal_container bg-[#1F3641] w-full h-[228px] flex flex-col items-center justify-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <h1 class="text-[#A8BFC9] text-2xl my-2 font-bold">RESTART GAME?</h1>
 
         <div>
           <button
+            id="restart_modal_cancel"
             class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#A8BFC9]"
           >
             NO, CANCEL
           </button>
           <button
+            id="restart_modal_confirm"
             class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#F2B137]"
           >
             YES, RESTART
@@ -253,6 +260,18 @@
       const x__result = document.getElementById("x__result");
       const o__result = document.getElementById("o__result");
 
+      const show_restart_modal = document.getElementById("show_restart_modal");
+      const restart_modal_container = document.getElementById(
+        "restart_modal_container"
+      );
+
+      const restart_modal_cancel = document.getElementById(
+        "restart_modal_cancel"
+      );
+      const restart_modal_confirm = document.getElementById(
+        "restart_modal_confirm"
+      );
+
       const WINNING_COMBINATION = [
         [0, 1, 2],
         [3, 4, 5],
@@ -284,6 +303,35 @@
 
         CURRENT_PLAYER = USER_Y;
         console.log(CURRENT_PLAYER);
+      });
+
+      //RESTART MODAL
+      show_restart_modal.addEventListener("click", () => {
+        restart_modal_container.classList.remove("hidden");
+      });
+
+      //CLOSE THE CANCEL MODAL
+      restart_modal_cancel.addEventListener("click", () => {
+        restart_modal_container.classList.add("hidden");
+      });
+
+      //RESTART THE GAME
+      restart_modal_confirm.addEventListener("click", () => {
+        restart_modal_container.classList.add("hidden");
+
+        //CLEAR THE BOARD
+        const boxes = document.querySelectorAll(".box");
+        boxes.forEach((box) => {
+          box.innerHTML = "";
+        });
+
+        //RESET THE REMAINING BOXES
+        REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        //RESET THE USER COMBINATION
+        user_combination.length = 0;
+        cpu_combination.length = 0;
+        second_user.length = 0;
       });
 
       //GAME MODE SELECTION
@@ -391,6 +439,32 @@
         });
       };
 
+      const checkResults = (combination, user_combination, cpu_combination) => {
+        //CHECK IF CURRENT COMBINATIONS MATCHES THE WINNING COMBINATION
+        for (let i = 0; i < combination.length; i++) {
+          if (combination[i].every((item) => user_combination.includes(item))) {
+            console.log("PLAYER WIN");
+            return 1;
+          }
+        }
+
+        //check if the cpu wins
+        for (let i = 0; i < combination.length; i++) {
+          if (combination[i].every((item) => cpu_combination.includes(item))) {
+            console.log("OTHER PLAYER WIN");
+            return 2;
+          }
+        }
+
+        //check if it is a draw
+        if (checkDraw()) {
+          console.log("DRAW");
+          return 3;
+        }
+
+        return 0;
+      };
+
       // Add event listeners to the boxes
       boxes.forEach((box, index) => {
         box.addEventListener("click", () => {
@@ -406,26 +480,29 @@
                 // Remove the index from the remaining boxes array
                 REMAINING_BOXES.splice(REMAINING_BOXES.indexOf(index), 1);
 
-                //check if the user wins
-                const letOpponentContinue = checkUserWin(
-                  WINNING_COMBINATION,
-                  user_combination
-                );
+                // //check if the user wins
+                // const letOpponentContinue = checkUserWin(
+                //   WINNING_COMBINATION,
+                //   user_combination
+                // );
 
-                //check if the cpu wins
-                const letUserContinue = checkCPUWin(
+                // //check if the cpu wins
+                // const letUserContinue = checkCPUWin(
+                //   WINNING_COMBINATION,
+                //   cpu_combination
+                // );
+
+                const result = checkResults(
                   WINNING_COMBINATION,
+                  user_combination,
                   cpu_combination
                 );
 
-                if (!letOpponentContinue) {
+                console.log("result: ", result);
+
+                if (result === 0) {
                   //set timeout to make the CPU choice after 2 second
                   setTimeout(() => {
-                    if (REMAINING_BOXES.length === 0) {
-                      console.log("DRAW");
-                      return;
-                    }
-
                     const random_box = getRandomNumber();
                     //ADD THE RANDOM BOX TO THE CPU COMBINATION
                     cpu_combination.push(random_box);
@@ -446,19 +523,23 @@
                 }
 
                 //Check if the user or cpu win, then update the RESULT variable, if x win, add 1 to the x score, if o win, add 1 to the o score, if draw, add 1 to the draw score
-                if (letOpponentContinue) {
+                if (result === 1) {
                   // RESULT = "X";
                   RESULT.X++;
+
+                  x__result.innerHTML = RESULT.X;
                   console.log(RESULT.X);
 
                   // user__result.innerHTML = RESULT.X;
-                } else if (letUserContinue) {
+                } else if (result === 2) {
                   // RESULT = "O";
                   RESULT.O++;
+                  o__result.innerHTML = RESULT.O;
                   // opponent__result.innerHTML = RESULT.O;
-                } else if (checkDraw()) {
+                } else if (result === 3) {
                   // RESULT = "DRAW";
                   RESULT.TIE++;
+                  tie__result.innerHTML = RESULT.TIE;
                   // tie__result.innerHTML = RESULT.TIE;
                 }
               } else {
