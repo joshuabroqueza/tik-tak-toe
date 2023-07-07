@@ -82,50 +82,41 @@
         <!-- BOX CONTAINER -->
         <div class="mt-10 grid grid-rows-3 grid-flow-col gap-6">
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            1
-          </div>
+            id="box_1"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            2
-          </div>
+            id="box_2"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            3
-          </div>
+            id="box_3"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            4
-          </div>
+            id="box_4"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            5
-          </div>
+            id="box_5"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            6
-          </div>
+            id="box_6"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            7
-          </div>
+            id="box_7"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            8
-          </div>
+            id="box_8"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
           <div
-            class="h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
-          >
-            9
-          </div>
+            id="box_9"
+            class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
+          ></div>
         </div>
 
         <!-- RESULT CONTAINER -->
@@ -139,7 +130,7 @@
           <div
             class="tie-result h-16 w-24 bg-[#979797] flex flex-col justify-center items-center rounded-md shadow-md drop-shadow-md"
           >
-            <span class="text-sm font-semibold">X (YOU)</span>
+            <span class="text-sm font-semibold">TIES</span>
             <span class="font-bold">14</span>
           </div>
           <div
@@ -219,9 +210,22 @@
       </div>
     </div>
     <script>
-      var USER_CHOICE = null;
-      var USER_X = 0;
-      var USER_Y = 1;
+      var currentPlayer = null;
+      var USER_X = "X";
+      var USER_Y = "O";
+
+      const X = "./assets/icon-x.svg";
+      const O = "./assets/icon-o.svg";
+
+      // const box_1 = document.getElementById("box_1");
+      // const box_2 = document.getElementById("box_2");
+      // const box_3 = document.getElementById("box_3");
+      // const box_4 = document.getElementById("box_4");
+      // const box_5 = document.getElementById("box_5");
+      // const box_6 = document.getElementById("box_6");
+      // const box_7 = document.getElementById("box_7");
+      // const box_8 = document.getElementById("box_8");
+      // const box_9 = document.getElementById("box_9");
 
       const user_pick_x = document.getElementById("choice_x");
       const user_pick_o = document.getElementById("choice_o");
@@ -240,6 +244,37 @@
         user_pick_x.classList.remove("px-4", "rounded", "bg-[#9797977b]");
 
         USER_CHOICE = USER_Y;
+      });
+
+      // BOARD SELECTION
+      // Define the box elements
+      const boxes = document.querySelectorAll(".box");
+
+      // Add event listeners to the boxes
+      boxes.forEach((box, index) => {
+        box.addEventListener("click", () => {
+          if (box.innerHTML === "") {
+            if (currentPlayer === "X") {
+              box.innerHTML = '<img src="./assets/icon-x.svg" alt="x" />';
+              console.log(box);
+            } else {
+              box.innerHTML = '<img src="./assets/icon-o.svg" alt="o" />';
+            }
+
+            // Switch players
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+
+            // // Check for win or draw
+            // if (checkWin()) {
+            //   console.log("Player " + currentPlayer + " wins!");
+            //   // You can add your logic here for displaying a win modal
+            // } else if (checkDraw()) {
+            //   console.log("It's a draw!");
+            //   // You can add your logic here for displaying a draw modal
+            // }
+          }
+          console.log("hello");
+        });
       });
     </script>
   </body>
