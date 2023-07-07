@@ -13,7 +13,8 @@
     <div class="bg-[#1A2A33] h-screen">
       <!-- FIRST PAGE -->
       <div
-        class="hidden first_page h-full flex flex-col items-center justify-center"
+        id="first_page"
+        class="first_page h-full flex flex-col items-center justify-center"
       >
         <div class="flex flex-row my-4">
           <img class="h-8 m-1" src="./assets/icon-x.svg" alt="x" />
@@ -43,11 +44,13 @@
         <!-- USER OPTIONS -->
         <div class="flex flex-col my-8">
           <button
+            id="new_game_cpu"
             class="bg-[#F2B137] m-2 px-20 py-3 font-bold rounded drop-shadow-md shadow-md hover:shadow-xl active:scale-90 transition duration-150"
           >
             NEW GAME (VS CPU)
           </button>
           <button
+            id="new_game_player"
             class="bg-[#31C3BD] m-2 px-18 py-3 font-bold rounded drop-shadow-md shadow-md hover:shadow-xl active:scale-90 transition duration-150"
           >
             NEW GAME (VS PLAYER)
@@ -57,7 +60,8 @@
 
       <!-- PAGE 2 -->
       <div
-        class="second_page h-full flex flex-col items-center md:justify-center"
+        id="second_page"
+        class="hidden second_page h-full flex flex-col items-center md:justify-center"
       >
         <div
           class="second_page_header flex justify-between items-center w-96 px-6 my-5"
@@ -69,7 +73,7 @@
           <div
             class="mr-10 drop-shadow-md px-5 py-2 bg-[#1F3641] font-bold text-slate-500 rounded"
           >
-            <span class="user_turn">X</span>
+            <span id="user_turn_display" class="user_turn_display">X</span>
             <span>TURN</span>
           </div>
           <button
@@ -82,39 +86,39 @@
         <!-- BOX CONTAINER -->
         <div class="mt-10 grid grid-rows-3 grid-flow-col gap-6">
           <div
-            id="box_1"
+            id="1"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
           <div
-            id="box_2"
+            id="2"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
           <div
-            id="box_3"
+            id="3"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
           <div
-            id="box_4"
+            id="4"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
           <div
-            id="box_5"
+            id="5"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
           <div
-            id="box_6"
+            id="6"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
           <div
-            id="box_7"
+            id="7"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
           <div
-            id="box_8"
+            id="8"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
           <div
-            id="box_9"
+            id="9"
             class="box h-24 w-24 bg-[#1F3641] rounded-lg drop-shadow-md flex items-center justify-center"
           ></div>
         </div>
@@ -124,20 +128,26 @@
           <div
             class="user-result h-16 w-24 bg-[#31C3BD] flex flex-col justify-center items-center rounded-md shadow-md drop-shadow-md"
           >
-            <span class="text-sm font-semibold">X (YOU)</span>
-            <span class="font-bold">14</span>
+            <div class="text-sm font-semibold">
+              <span>X</span>
+              <span id="x_user">(YOU)</span>
+            </div>
+            <span id="x__result" class="font-bold">O</span>
           </div>
           <div
             class="tie-result h-16 w-24 bg-[#979797] flex flex-col justify-center items-center rounded-md shadow-md drop-shadow-md"
           >
             <span class="text-sm font-semibold">TIES</span>
-            <span class="font-bold">14</span>
+            <span id="tie__result" class="font-bold">O</span>
           </div>
           <div
             class="opponent-result h-16 w-24 bg-[#F2B137] flex flex-col justify-center items-center rounded-md shadow-md drop-shadow-md"
           >
-            <span class="text-sm font-semibold">O (CPU)</span>
-            <span class="font-bold">14</span>
+            <div class="text-sm font-semibold">
+              <span>O</span>
+              <span id="o_user">(CPU)</span>
+            </div>
+            <span id="o__result" class="font-bold">O</span>
           </div>
         </div>
       </div>
@@ -210,32 +220,61 @@
       </div>
     </div>
     <script>
-      var currentPlayer = null;
+      var CURRENT_PLAYER = "X";
+      var OPPONENT = "O";
       var USER_X = "X";
       var USER_Y = "O";
+      var MODE_OF_THE_GAME = null;
+      var REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+      var RESULT = {
+        X: 0,
+        O: 0,
+        TIE: 0,
+      };
 
       const X = "./assets/icon-x.svg";
       const O = "./assets/icon-o.svg";
 
-      // const box_1 = document.getElementById("box_1");
-      // const box_2 = document.getElementById("box_2");
-      // const box_3 = document.getElementById("box_3");
-      // const box_4 = document.getElementById("box_4");
-      // const box_5 = document.getElementById("box_5");
-      // const box_6 = document.getElementById("box_6");
-      // const box_7 = document.getElementById("box_7");
-      // const box_8 = document.getElementById("box_8");
-      // const box_9 = document.getElementById("box_9");
-
       const user_pick_x = document.getElementById("choice_x");
       const user_pick_o = document.getElementById("choice_o");
+      const first_page = document.getElementById("first_page");
+      const second_page = document.getElementById("second_page");
+
+      const new_game_player = document.getElementById("new_game_player");
+      const new_game_cpu = document.getElementById("new_game_cpu");
+      const user_turn_display = document.getElementById("user_turn_display");
+
+      const user__result = document.getElementById("user__result");
+      const tie__result = document.getElementById("tie__result");
+      const opponent__result = document.getElementById("opponent__result");
+
+      const o_user = document.getElementById("o_user");
+      const x_user = document.getElementById("x_user");
+      const x__result = document.getElementById("x__result");
+      const o__result = document.getElementById("o__result");
+
+      const WINNING_COMBINATION = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+      ];
+
+      const user_combination = [];
+      const cpu_combination = [];
+      const second_user = [];
 
       user_pick_x.addEventListener("click", () => {
         // Update the class and global variable for user's X choice
         user_pick_x.classList.add("px-4", "rounded", "bg-[#9797977b]");
         user_pick_o.classList.remove("px-4", "rounded", "bg-[#9797977b]");
 
-        USER_CHOICE = USER_X;
+        CURRENT_PLAYER = USER_X;
+        console.log(CURRENT_PLAYER);
       });
 
       user_pick_o.addEventListener("click", () => {
@@ -243,37 +282,273 @@
         user_pick_o.classList.add("px-4", "rounded", "bg-[#9797977b]");
         user_pick_x.classList.remove("px-4", "rounded", "bg-[#9797977b]");
 
-        USER_CHOICE = USER_Y;
+        CURRENT_PLAYER = USER_Y;
+        console.log(CURRENT_PLAYER);
       });
+
+      //GAME MODE SELECTION
+
+      //PLAYER VS PLAYER
+      new_game_player.addEventListener("click", () => {
+        // Update the class and global variable for user's X choice
+
+        //add hidden to the first page modal
+        first_page.classList.add("hidden");
+        //remove hidden to the second page modal
+        second_page.classList.remove("hidden");
+
+        //GET CURRENT_PLAYER, IF USER IS X, set x_user to user then o_user to opponent
+        if (CURRENT_PLAYER === USER_X) {
+          x_user.textContent = "YOU";
+          o_user.textContent = "OPPONENT";
+        } else {
+          x_user.textContent = "OPPONENT";
+          o_user.textContent = "YOU";
+        }
+
+        MODE_OF_THE_GAME = "PVP";
+      });
+
+      //PLAYER VS CPU
+      new_game_cpu.addEventListener("click", () => {
+        // Update the class and global variable for user's X choice
+        new_game_player.classList.add("px-4", "rounded", "bg-[#9797977b]");
+        new_game_cpu.classList.remove("px-4", "rounded", "bg-[#9797977b]");
+
+        //add hidden to the first page modal
+        first_page.classList.add("hidden");
+        //remove hidden to the second page modal
+        second_page.classList.remove("hidden");
+
+        MODE_OF_THE_GAME = "PVC";
+
+        //IF CURRENT PLAYER IS X, DO NOTHING, IF CURRENT PLAYER IS O, CPU SHOULD FIRST PLAY AND PICK A RANDOM BOX
+        if (CURRENT_PLAYER === USER_X) {
+          //IF  PLAYER IS X, DO NOTHING
+        } else {
+          //LET THE CPU PICK A RANDOM BOX SINCE HE IS X
+          setTimeout(() => {
+            const random_box = getRandomNumber();
+            //ADD THE RANDOM BOX TO THE CPU COMBINATION
+            cpu_combination.push(random_box);
+
+            // Remove the index from the remaining boxes array
+            REMAINING_BOXES.splice(REMAINING_BOXES.indexOf(random_box), 1);
+            console.log(REMAINING_BOXES);
+
+            //update the box with the CPU choice
+            boxes[random_box].innerHTML = `<img src="${X}" alt="X" />`;
+            //UPDATING THE NEXT TURN DISPLAY
+            user_turn_display.innerHTML = "O";
+            checkCPUWin(WINNING_COMBINATION, cpu_combination);
+          }, 1000);
+
+          x_user.textContent = "OPPONENT";
+          o_user.textContent = "YOU";
+        }
+      });
+
+      //GET A RANDOM NUMBER FROM THE REMAINING BOXES
+      const getRandomNumber = () => {
+        const random_box = Math.floor(Math.random() * REMAINING_BOXES.length);
+        console.log("generated random number: ", REMAINING_BOXES[random_box]);
+
+        return REMAINING_BOXES[random_box];
+      };
 
       // BOARD SELECTION
       // Define the box elements
       const boxes = document.querySelectorAll(".box");
 
+      const checkUserWin = (combination, current_combination) => {
+        //CHECK IF CURRENT COMBINATIONS MATCHES THE WINNING COMBINATION
+        for (let i = 0; i < combination.length; i++) {
+          if (
+            combination[i].every((item) => current_combination.includes(item))
+          ) {
+            console.log("PLAYER WIN");
+            return true;
+          }
+        }
+      };
+
+      const checkCPUWin = (combination, current_combination) => {
+        //CHECK IF CURRENT COMBINATIONS MATCHES THE WINNING COMBINATION
+        for (let i = 0; i < combination.length; i++) {
+          if (
+            combination[i].every((item) => current_combination.includes(item))
+          ) {
+            console.log("OTHER PLAYER WIN");
+            return true;
+          }
+        }
+      };
+
+      const checkDraw = () => {
+        // Check if all the boxes are filled
+        return [...boxes].every((box) => {
+          return box.innerHTML !== "";
+        });
+      };
+
       // Add event listeners to the boxes
       boxes.forEach((box, index) => {
         box.addEventListener("click", () => {
-          if (box.innerHTML === "") {
-            if (currentPlayer === "X") {
-              box.innerHTML = '<img src="./assets/icon-x.svg" alt="x" />';
-              console.log(box);
-            } else {
-              box.innerHTML = '<img src="./assets/icon-o.svg" alt="o" />';
+          //CHECK IF THE GAME IS PVP OR PVC
+          if (MODE_OF_THE_GAME === "PVC") {
+            if (box.innerHTML === "") {
+              if (CURRENT_PLAYER === "X") {
+                box.innerHTML = '<img src="./assets/icon-x.svg" alt="x" />';
+                user_turn_display.innerHTML = "O";
+
+                // Add the index to the user combination array
+                user_combination.push(index);
+                // Remove the index from the remaining boxes array
+                REMAINING_BOXES.splice(REMAINING_BOXES.indexOf(index), 1);
+
+                //check if the user wins
+                const letOpponentContinue = checkUserWin(
+                  WINNING_COMBINATION,
+                  user_combination
+                );
+
+                //check if the cpu wins
+                const letUserContinue = checkCPUWin(
+                  WINNING_COMBINATION,
+                  cpu_combination
+                );
+
+                if (!letOpponentContinue) {
+                  //set timeout to make the CPU choice after 2 second
+                  setTimeout(() => {
+                    if (REMAINING_BOXES.length === 0) {
+                      console.log("DRAW");
+                      return;
+                    }
+
+                    const random_box = getRandomNumber();
+                    //ADD THE RANDOM BOX TO THE CPU COMBINATION
+                    cpu_combination.push(random_box);
+
+                    // Remove the index from the remaining boxes array
+                    REMAINING_BOXES.splice(
+                      REMAINING_BOXES.indexOf(random_box),
+                      1
+                    );
+                    console.log(REMAINING_BOXES);
+
+                    //update the box with the CPU choice
+                    boxes[random_box].innerHTML = `<img src="${O}" alt="O" />`;
+                    //UPDATING THE NEXT TURN DISPLAY
+                    user_turn_display.innerHTML = "X";
+                    // checkCPUWin(WINNING_COMBINATION, cpu_combination);
+                  }, 1000);
+                }
+
+                //Check if the user or cpu win, then update the RESULT variable, if x win, add 1 to the x score, if o win, add 1 to the o score, if draw, add 1 to the draw score
+                if (letOpponentContinue) {
+                  // RESULT = "X";
+                  RESULT.X++;
+                  console.log(RESULT.X);
+
+                  // user__result.innerHTML = RESULT.X;
+                } else if (letUserContinue) {
+                  // RESULT = "O";
+                  RESULT.O++;
+                  // opponent__result.innerHTML = RESULT.O;
+                } else if (checkDraw()) {
+                  // RESULT = "DRAW";
+                  RESULT.TIE++;
+                  // tie__result.innerHTML = RESULT.TIE;
+                }
+              } else {
+                //MODE OF GAME PVC, USER IS O
+
+                box.innerHTML = '<img src="./assets/icon-o.svg" alt="o" />';
+                user_turn_display.innerHTML = "X";
+
+                // Add the index to the user combination array
+                user_combination.push(index);
+                // Remove the index from the remaining boxes array
+                REMAINING_BOXES.splice(REMAINING_BOXES.indexOf(index), 1);
+
+                //check if the user wins
+                const letOpponentContinue = checkUserWin(
+                  WINNING_COMBINATION,
+                  user_combination
+                );
+
+                //check if the cpu wins
+                const letUserContinue = checkCPUWin(
+                  WINNING_COMBINATION,
+                  cpu_combination
+                );
+
+                console.log("letOpponentContinue: ", letOpponentContinue);
+                if (!letOpponentContinue) {
+                  //set timeout to make the CPU choice after 2 second
+                  setTimeout(() => {
+                    if (REMAINING_BOXES.length === 0) {
+                      console.log("DRAW");
+                      return;
+                    }
+
+                    const random_box = getRandomNumber();
+                    //ADD THE RANDOM BOX TO THE CPU COMBINATION
+                    cpu_combination.push(random_box);
+
+                    // Remove the index from the remaining boxes array
+                    REMAINING_BOXES.splice(
+                      REMAINING_BOXES.indexOf(random_box),
+                      1
+                    );
+                    console.log(REMAINING_BOXES);
+
+                    //update the box with the CPU choice
+                    boxes[random_box].innerHTML = `<img src="${X}" alt="X" />`;
+                    //UPDATING THE NEXT TURN DISPLAY
+                    user_turn_display.innerHTML = "O";
+                    // checkCPUWin(WINNING_COMBINATION, cpu_combination);
+                  }, 1000);
+                }
+
+                //Check if the user or cpu win, then update the RESULT variable, if x win, add 1 to the x score, if o win, add 1 to the o score, if draw, add 1 to the draw score
+                if (letOpponentContinue) {
+                  // RESULT = "X";
+                  RESULT.O++;
+                  console.log(RESULT.O);
+
+                  // user__result.innerHTML = RESULT.X;
+                } else if (letUserContinue) {
+                  // RESULT = "O";
+                  RESULT.X++;
+                  // opponent__result.innerHTML = RESULT.O;
+                } else if (checkDraw()) {
+                  // RESULT = "DRAW";
+                  RESULT.TIE++;
+                  // tie__result.innerHTML = RESULT.TIE;
+                }
+              }
             }
-
-            // Switch players
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
-
-            // // Check for win or draw
-            // if (checkWin()) {
-            //   console.log("Player " + currentPlayer + " wins!");
-            //   // You can add your logic here for displaying a win modal
-            // } else if (checkDraw()) {
-            //   console.log("It's a draw!");
-            //   // You can add your logic here for displaying a draw modal
+          } else if (MODE_OF_THE_GAME === "PVP") {
+            // if (box.innerHTML === "") {
+            //   if (CURRENT_PLAYER === "X") {
+            //     box.innerHTML = '<img src="./assets/icon-x.svg" alt="x" />';
+            //     user_turn_display.innerHTML = "O";
+            //     // Add the index to the user combination array
+            //     user_combination.push(index);
+            //     checkWin(WINNING_COMBINATION, user_combination);
+            //   } else {
+            //     box.innerHTML = '<img src="./assets/icon-o.svg" alt="o" />';
+            //     user_turn_display.innerHTML = "X";
+            //     // Add the index to the cpu combination array
+            //     cpu_combination.push(index);
+            //     checkWin(WINNING_COMBINATION, cpu_combination);
+            //   }
+            //   // Switch players
+            //   CURRENT_PLAYER = CURRENT_PLAYER === "X" ? "O" : "X";
             // }
           }
-          console.log("hello");
         });
       });
     </script>
