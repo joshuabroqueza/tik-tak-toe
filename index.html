@@ -225,7 +225,41 @@
           </button>
         </div>
       </div>
+
+      <!-- TIE MODAL -->
+      <div class="tie_modal_container">
+        <div
+          id="open_tie_modal_container"
+          class="hidden fixed inset-0 flex items-center justify-center z-[999] bg-gray-900 bg-opacity-75"
+        >
+          <div
+            class="flex flex-col justify-center p-3 items-center bg-[#1F3641] w-full h-[250px]"
+          >
+            <h1 class="text-[#A8BFC9] text-2xl my-5 font-bold">ROUND TIED</h1>
+
+            <div>
+              <button
+                id="tie_modal_quit"
+                class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#A8BFC9]"
+              >
+                QUIT
+              </button>
+              <button
+                id="tie_modal_next_round"
+                class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#F2B137]"
+              >
+                NEXT ROUND
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--  -->
+
+      <!--  -->
     </div>
+
     <script>
       var CURRENT_PLAYER = "X";
       var OPPONENT = "O";
@@ -279,6 +313,15 @@
       );
       const win_modal_quit = document.getElementById("win_modal_quit");
       const win_modal_next = document.getElementById("win_modal_next");
+
+      //TIE MODAL SECTION
+      const open_tie_modal_container = document.getElementById(
+        "open_tie_modal_container"
+      );
+      const tie_modal_quit = document.getElementById("tie_modal_quit");
+      const tie_modal_next_round = document.getElementById(
+        "tie_modal_next_round"
+      );
 
       const WINNING_COMBINATION = [
         [0, 1, 2],
@@ -386,6 +429,57 @@
       });
 
       //GAME MODE SELECTION
+
+      //TIE MODAL SELECTION
+
+      tie_modal_quit.addEventListener("click", () => {
+        //CLOSE THE TIE MODAL
+        open_tie_modal_container.classList.add("hidden");
+        second_page.classList.add("hidden");
+        first_page.classList.remove("hidden");
+
+        //CLEAR THE BOARD
+        const boxes = document.querySelectorAll(".box");
+        boxes.forEach((box) => {
+          box.innerHTML = "";
+        });
+
+        //RESET THE REMAINING BOXES
+        REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        //RESET THE USER COMBINATION
+        user_combination.length = 0;
+        cpu_combination.length = 0;
+        second_user.length = 0;
+
+        //RESET RESULT VARIABLE
+        RESULT.X = 0;
+        RESULT.O = 0;
+        RESULT.TIE = 0;
+
+        o__result.innerHTML = 0;
+        x__result.innerHTML = 0;
+        tie__result.innerHTML = 0;
+      });
+
+      tie_modal_next_round.addEventListener("click", () => {
+        //CLOSE THE TIE MODAL
+        open_tie_modal_container.classList.add("hidden");
+
+        //CLEAR THE BOARD
+        const boxes = document.querySelectorAll(".box");
+        boxes.forEach((box) => {
+          box.innerHTML = "";
+        });
+
+        //RESET THE REMAINING BOXES
+        REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        //RESET THE USER COMBINATION
+        user_combination.length = 0;
+        cpu_combination.length = 0;
+        second_user.length = 0;
+      });
 
       //PLAYER VS PLAYER
       new_game_player.addEventListener("click", () => {
@@ -551,7 +645,7 @@
                       REMAINING_BOXES.indexOf(random_box),
                       1
                     );
-                    console.log(REMAINING_BOXES);
+                    console.log("REMAINING_BOXES", REMAINING_BOXES);
 
                     //update the box with the CPU choice
                     boxes[random_box].innerHTML = `<img src="${O}" alt="O" />`;
@@ -583,7 +677,9 @@
                   // RESULT = "DRAW";
                   RESULT.TIE++;
                   tie__result.innerHTML = RESULT.TIE;
-                  // tie__result.innerHTML = RESULT.TIE;
+
+                  //SHOW TIE MODAL
+                  open_tie_modal_container.classList.remove("hidden");
                 }
               } else {
                 //MODE OF GAME PVC, USER IS O
