@@ -130,6 +130,36 @@ win_modal_next.addEventListener("click", () => {
   second_user.length = 0;
 });
 
+//RESET MODAL
+//RESTART MODAL
+show_restart_modal.addEventListener("click", () => {
+  restart_modal_container.classList.remove("hidden");
+});
+
+//CLOSE THE CANCEL MODAL
+restart_modal_cancel.addEventListener("click", () => {
+  restart_modal_container.classList.add("hidden");
+});
+
+//RESTART THE GAME
+restart_modal_confirm.addEventListener("click", () => {
+  restart_modal_container.classList.add("hidden");
+
+  //CLEAR THE BOARD
+  const boxes = document.querySelectorAll(".box");
+  boxes.forEach((box) => {
+    box.innerHTML = "";
+  });
+
+  //RESET THE REMAINING BOXES
+  REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+  //RESET THE USER COMBINATION
+  user_combination.length = 0;
+  cpu_combination.length = 0;
+  second_user.length = 0;
+});
+
 //TIE MODAL SELECTION
 
 tie_modal_quit.addEventListener("click", () => {
