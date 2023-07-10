@@ -155,28 +155,6 @@
 
       <!-- MODAL RESULT -->
 
-      <div
-        class="hidden lost_modal_container bg-[#1F3641] w-full h-[228px] flex flex-col items-center justify-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-      >
-        <p class="text-[#A8BFC9] text-sm font-bold">OH NO, YOU LOST...</p>
-        <div class="flex flex-row text-[#F2B137] text-2xl font-bold my-3">
-          <span class="next_first_action mx-2">O</span>
-          <p class="">TAKES THE ROUND</p>
-        </div>
-        <div>
-          <button
-            class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#A8BFC9]"
-          >
-            QUIT
-          </button>
-          <button
-            class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#F2B137]"
-          >
-            NEXT ROUND
-          </button>
-        </div>
-      </div>
-
       <!-- WIN MODAL CONTAINER -->
       <div
         id="win_modal_container"
@@ -255,12 +233,45 @@
         </div>
       </div>
 
+      <!-- LOST MODAL -->
+
+      <div class="lost_modal_container">
+        <div
+          id="open_lost_modal_container"
+          class="hidden fixed inset-0 flex items-center justify-center z-[999] bg-gray-900 bg-opacity-75"
+        >
+          <div
+            class="flex flex-col justify-center p-3 items-center bg-[#1F3641] w-full h-[250px]"
+          >
+            <p class="text-[#A8BFC9] text-sm font-bold">OH NO, YOU LOST...</p>
+            <div class="flex flex-row text-[#F2B137] text-2xl font-bold my-3">
+              <span class="next_first_action mx-2">CPU</span>
+              <p class="">TAKES THE ROUND</p>
+            </div>
+            <div>
+              <button
+                id="close_lost_modal"
+                class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#A8BFC9]"
+              >
+                QUIT
+              </button>
+              <button
+                id="next_round_lost_modal"
+                class="rounded px-4 py-2 drop-shadow-md shadow-sm font-bold mx-2 bg-[#F2B137]"
+              >
+                NEXT ROUND
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!--  -->
 
       <!--  -->
     </div>
 
-    <script>
+    <!-- <script>
       var CURRENT_PLAYER = "X";
       var OPPONENT = "O";
       var USER_X = "X";
@@ -323,6 +334,16 @@
         "tie_modal_next_round"
       );
 
+      //LOST MODAL
+
+      const open_lost_modal_container = document.getElementById(
+        "open_lost_modal_container"
+      );
+      const close_lost_modal = document.getElementById("close_lost_modal");
+      const next_round_lost_modal = document.getElementById(
+        "next_round_lost_modal"
+      );
+
       const WINNING_COMBINATION = [
         [0, 1, 2],
         [3, 4, 5],
@@ -337,6 +358,31 @@
       const user_combination = [];
       const cpu_combination = [];
       const second_user = [];
+
+      const clearData = () => {
+        //CLEAR THE BOARD
+        const boxes = document.querySelectorAll(".box");
+        boxes.forEach((box) => {
+          box.innerHTML = "";
+        });
+
+        //RESET THE REMAINING BOXES
+        REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        //RESET THE USER COMBINATION
+        user_combination.length = 0;
+        cpu_combination.length = 0;
+        second_user.length = 0;
+
+        //RESET RESULT VARIABLE
+        RESULT.X = 0;
+        RESULT.O = 0;
+        RESULT.TIE = 0;
+
+        o__result.innerHTML = 0;
+        x__result.innerHTML = 0;
+        tie__result.innerHTML = 0;
+      };
 
       user_pick_x.addEventListener("click", () => {
         // Update the class and global variable for user's X choice
@@ -391,23 +437,7 @@
         first_page.classList.remove("hidden");
         second_page.classList.add("hidden");
 
-        //CLEAR THE BOARD
-        const boxes = document.querySelectorAll(".box");
-        boxes.forEach((box) => {
-          box.innerHTML = "";
-        });
-
-        //RESET THE REMAINING BOXES
-        REMAINING_BOXES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-
-        //RESET THE USER COMBINATION
-        user_combination.length = 0;
-        cpu_combination.length = 0;
-        second_user.length = 0;
-
-        RESULT.X = 0;
-        RESULT.O = 0;
-        RESULT.TIE = 0;
+        clearData();
       });
 
       win_modal_next.addEventListener("click", () => {
@@ -438,6 +468,14 @@
         second_page.classList.add("hidden");
         first_page.classList.remove("hidden");
 
+        //CLEAR DATA
+        clearData();
+      });
+
+      tie_modal_next_round.addEventListener("click", () => {
+        //CLOSE THE TIE MODAL
+        open_tie_modal_container.classList.add("hidden");
+
         //CLEAR THE BOARD
         const boxes = document.querySelectorAll(".box");
         boxes.forEach((box) => {
@@ -451,20 +489,25 @@
         user_combination.length = 0;
         cpu_combination.length = 0;
         second_user.length = 0;
-
-        //RESET RESULT VARIABLE
-        RESULT.X = 0;
-        RESULT.O = 0;
-        RESULT.TIE = 0;
-
-        o__result.innerHTML = 0;
-        x__result.innerHTML = 0;
-        tie__result.innerHTML = 0;
       });
 
-      tie_modal_next_round.addEventListener("click", () => {
-        //CLOSE THE TIE MODAL
-        open_tie_modal_container.classList.add("hidden");
+      //LOST MODAL CONTAINER
+      close_lost_modal.addEventListener("click", () => {
+        //HIDE THE LOST MODAL
+        open_lost_modal_container.classList.add("hidden");
+
+        //GO TO FIRST PAGE
+        second_page.classList.add("hidden");
+        first_page.classList.remove("hidden");
+        //HIDE THE SECOND PAGE
+
+        //CLEAR DATA
+        clearData();
+      });
+
+      next_round_lost_modal.addEventListener("click", () => {
+        //HIDE THE LOST MODAL
+        open_lost_modal_container.classList.add("hidden");
 
         //CLEAR THE BOARD
         const boxes = document.querySelectorAll(".box");
@@ -504,10 +547,6 @@
 
       //PLAYER VS CPU
       new_game_cpu.addEventListener("click", () => {
-        // Update the class and global variable for user's X choice
-        new_game_player.classList.add("px-4", "rounded", "bg-[#9797977b]");
-        new_game_cpu.classList.remove("px-4", "rounded", "bg-[#9797977b]");
-
         //add hidden to the first page modal
         first_page.classList.add("hidden");
         //remove hidden to the second page modal
@@ -649,6 +688,24 @@
 
                     //update the box with the CPU choice
                     boxes[random_box].innerHTML = `<img src="${O}" alt="O" />`;
+
+                    const checkCpuResult = checkCPUWin(
+                      WINNING_COMBINATION,
+                      cpu_combination
+                    );
+
+                    //IF CPU WIN, SHOW I LOST
+                    if (checkCpuResult) {
+                      //update the result
+                      RESULT.O++;
+                      o__result.innerHTML = RESULT.O;
+
+                      setTimeout(() => {
+                        //show lost  modal
+                        open_lost_modal_container.classList.remove("hidden");
+                      }, 1500);
+                    }
+
                     //UPDATING THE NEXT TURN DISPLAY
                     user_turn_display.innerHTML = "X";
                     // checkCPUWin(WINNING_COMBINATION, cpu_combination);
@@ -692,27 +749,17 @@
                 // Remove the index from the remaining boxes array
                 REMAINING_BOXES.splice(REMAINING_BOXES.indexOf(index), 1);
 
-                //check if the user wins
-                const letOpponentContinue = checkUserWin(
+                const result = checkResults(
                   WINNING_COMBINATION,
-                  user_combination
-                );
-
-                //check if the cpu wins
-                const letUserContinue = checkCPUWin(
-                  WINNING_COMBINATION,
+                  user_combination,
                   cpu_combination
                 );
 
-                console.log("letOpponentContinue: ", letOpponentContinue);
-                if (!letOpponentContinue) {
+                console.log("result: ", result);
+
+                if (result === 0) {
                   //set timeout to make the CPU choice after 2 second
                   setTimeout(() => {
-                    if (REMAINING_BOXES.length === 0) {
-                      console.log("DRAW");
-                      return;
-                    }
-
                     const random_box = getRandomNumber();
                     //ADD THE RANDOM BOX TO THE CPU COMBINATION
                     cpu_combination.push(random_box);
@@ -722,31 +769,57 @@
                       REMAINING_BOXES.indexOf(random_box),
                       1
                     );
-                    console.log(REMAINING_BOXES);
+                    console.log("REMAINING_BOXES", REMAINING_BOXES);
 
                     //update the box with the CPU choice
                     boxes[random_box].innerHTML = `<img src="${X}" alt="X" />`;
                     //UPDATING THE NEXT TURN DISPLAY
                     user_turn_display.innerHTML = "O";
-                    // checkCPUWin(WINNING_COMBINATION, cpu_combination);
+                    const checkCpuResult = checkCPUWin(
+                      WINNING_COMBINATION,
+                      cpu_combination
+                    );
+                    console.log("check cpu:", checkCpuResult);
+
+                    //IF CPU WIN, SHOW I LOST
+                    if (checkCpuResult) {
+                      //update the result
+                      RESULT.O++;
+                      o__result.innerHTML = RESULT.O;
+
+                      setTimeout(() => {
+                        //show lost  modal
+                        open_lost_modal_container.classList.remove("hidden");
+                      }, 1500);
+                    }
                   }, 1000);
                 }
 
                 //Check if the user or cpu win, then update the RESULT variable, if x win, add 1 to the x score, if o win, add 1 to the o score, if draw, add 1 to the draw score
-                if (letOpponentContinue) {
-                  // RESULT = "X";
+                if (result === 1) {
+                  //USER WINNER
                   RESULT.O++;
+
+                  o__result.innerHTML = RESULT.O;
                   console.log(RESULT.O);
 
+                  win_modal_container.classList.remove("hidden");
+
+                  //SHOW WIN MODAL
+
                   // user__result.innerHTML = RESULT.X;
-                } else if (letUserContinue) {
+                } else if (result === 2) {
                   // RESULT = "O";
                   RESULT.X++;
+                  x__result.innerHTML = RESULT.X;
                   // opponent__result.innerHTML = RESULT.O;
-                } else if (checkDraw()) {
+                } else if (result === 3) {
                   // RESULT = "DRAW";
                   RESULT.TIE++;
-                  // tie__result.innerHTML = RESULT.TIE;
+                  tie__result.innerHTML = RESULT.TIE;
+
+                  //SHOW TIE MODAL
+                  open_tie_modal_container.classList.remove("hidden");
                 }
               }
             }
@@ -771,6 +844,7 @@
           }
         });
       });
-    </script>
+    </script> -->
+    <script src="./app.js"></script>
   </body>
 </html>
